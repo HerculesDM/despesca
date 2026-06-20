@@ -28,8 +28,11 @@ function adicionarLinha() {
         return;
     }   
 
+   
+
     // Converte para float
-    preco = parseFloat(preco.replace(/\./g, '').replace(',', '.'));
+    //preco = parseFloat(preco.replace(/\./g, '').replace(',', '.'));
+     
 
     let peso_digitado = $('#input_peso').val().trim();
 
