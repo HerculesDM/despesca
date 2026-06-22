@@ -19,6 +19,8 @@ $( document ).ready(function() {
                 $("#tblPeixes tbody").html(localStorage.getItem('html_pesos'));
                 $("#pesos_box").html(localStorage.getItem('html_pesos_rel'))
 
+                $("#preco").prop('readonly',true);
+
                 calcular();
                 preencher_relatorio();
                 
