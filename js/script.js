@@ -268,6 +268,7 @@ $( document ).ready(function() {
         $("#tanque").val("");
         $("#comprador").val("");  
         $("#preco").val("");  
+        $("#preco").prop('readonly',false);
         $("#tblPeixes tbody").html("");   
         localStorage.clear();
         calcular();
