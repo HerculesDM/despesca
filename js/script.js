@@ -117,6 +117,11 @@ $( document ).ready(function() {
         $('#preco').prop('readonly', true);
 
         //salvar dados no navegador
+        salvar_dados();              
+
+    }
+
+    function salvar_dados() {
         localStorage.setItem('piscicultor', $('#comprador').val());
         localStorage.setItem('data', $('#data').val());
         localStorage.setItem('tanque', $('#tanque').val());
@@ -124,8 +129,7 @@ $( document ).ready(function() {
         localStorage.setItem('html_pesos', $("#tblPeixes tbody").html());       
         localStorage.setItem('peso_total', $("#pesoTotal").html());       
         localStorage.setItem('valor_total', $("#valorTotal").html());       
-        localStorage.setItem('html_pesos_rel', $("#pesos_box").html());       
-
+        localStorage.setItem('html_pesos_rel', $("#pesos_box").html()); 
     }
 
 
@@ -141,6 +145,8 @@ $( document ).ready(function() {
         $(`#${id}`).remove();  //remove div pesagem no relatorio
         $('#rel_peso_total').html( $('#pesoTotal').html() );  //atualiza peso total no rel
         $('#rel_valor_total').html( $('#valorTotal').html() );   //atualiza valor total no relatorio
+
+        salvar_dados();         
 
     });
 
