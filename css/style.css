@@ -15,6 +15,12 @@ body{
     max-width:1300px;
 }
 
+.scroll-vertical {
+    max-height: 300px;   /* ou height: 300px */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 /* ======== TÍTULO ======== */
 
 h2{

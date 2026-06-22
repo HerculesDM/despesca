@@ -1,143 +1,217 @@
-$(function () {
+$( document ).ready(function() {
 
-    // Data de hoje
-    $("#data").val(new Date().toISOString().split('T')[0]);    
+    var id_pesagem = 0;
+    
+    $("#data").val(new Date().toISOString().split('T')[0]);      // Data de hoje
+    $('#pesos_box').html('');  //limpar pesos teste do rel    
+    
+    
+    /*  inicio recupoeracao dados storage */
 
-    //$("#btnImprimir").click();
+        if( localStorage.getItem('data') !== null ) {
 
-    $('#pesos_box').html('');  //limpar pesos teste do rel
+            if (confirm("Recuperar dados da despesca anterior?")) {
+                // clicou em SIM
+                $('#data').val(localStorage.getItem('data'));
+                $('#tanque').val(localStorage.getItem('tanque'));
+                $('#comprador').val(localStorage.getItem('piscicultor'));
+                $('#preco').val(localStorage.getItem('preco'));
+                $("#tblPeixes tbody").html(localStorage.getItem('html_pesos'));
+                $("#pesos_box").html(localStorage.getItem('html_pesos_rel'))
 
-});
+                calcular();
+                preencher_relatorio();
+                
+            } else {
+                // clicou em NÃO
+                nova_despesca();
+            }
 
-/*=========================================
- ADICIONAR LINHA
-=========================================*/
+        }
 
-$("#btnAdicionar").click(function () {
-
-    adicionarLinha();
-
-});
-
-function adicionarLinha() {
-
-    let preco = $('#preco').val().trim();
-
-    if (preco === '') {
-        alert("Informe o preço por kg.");
-        return;
-    }   
-
-   
-
-    // Converte para float
-    //preco = parseFloat(preco.replace(/\./g, '').replace(',', '.'));
-     
-
-    let peso_digitado = $('#input_peso').val().trim();
-
-    if (peso_digitado === '') {
-        alert("Informe o campo Peso(Kg).");
-        return;
-    }   
+    /*  fim recupoeracao dados storage */
 
 
-    let linha = `
-        <tr>
-            <td>
 
-                <input
-                    type="number"
-                    min="0"
-                    step="0.001"
-                    class="form-control peso"
-                    readonly
-                    value="${peso_digitado}">
 
-            </td>
+    /*=========================================
+    ADICIONAR LINHA
+    =========================================*/
 
-            <td class="d-none">
+    $("#btnAdicionar").click(function () {
+        adicionarLinha();
+    });
 
-                <input
-                    type="number"   
-                    class="form-control preco"
-                    readonly 
-                    value="${preco}">
+    function adicionarLinha() {        
 
-            </td>
+        let preco = $('#preco').val().trim();
 
-            <td>
+        if (preco === '') {
+            alert("Informe o preço por kg.");
+            return;
+        }   
 
-                <input
-                    type="text"
-                    class="form-control subtotal"
-                    value="R$ 0,00"
-                    readonly>
+        let peso_digitado = $('#input_peso').val().trim();
 
-            </td>
+        if (peso_digitado === '') {
+            alert("Informe o campo Peso(Kg).");
+            return;
+        }   
 
-            <td class="text-center">
+        id_pesagem = id_pesagem + 1;
+        
+        let linha = `
+            <tr data-id="${id_pesagem}">
+                <td>
 
-                <button class="btn btn-danger btn-excluir">
+                    <input
+                        type="number"
+                        min="0"
+                        step="0.001"
+                        class="form-control peso"                        
+                        readonly
+                        value="${peso_digitado}">
 
-                    <i class="bi bi-trash"></i>
+                </td>
 
-                </button>
+                <td class="d-none">
 
-            </td>
+                    <input
+                        type="number"   
+                        class="form-control preco"
+                        readonly 
+                        value="${preco}">
 
-        </tr>
-    `;
+                </td>
 
-    $("#tblPeixes tbody").append(linha);
+                <td>
 
-    calcular();
-    preencher_relatorio();
-    $('#input_peso').val('');
+                    <input
+                        type="text"
+                        class="form-control subtotal"        
+                        value=""                
+                        >
 
-}
+                </td>
 
-/*=========================================
- REMOVER
-=========================================*/
+                <td class="text-center">
 
-$(document).on("click", ".btn-excluir", function () {
+                    <button class="btn btn-danger btn-excluir">
 
-    $(this).closest("tr").remove();
+                        <i class="bi bi-trash"></i>
 
-    calcular();
+                    </button>
 
-});
+                </td>
 
-/*=========================================
- CALCULAR
-=========================================*/
+            </tr>
+        `;
 
-$(document).on("keyup change", ".quantidade,.peso,.preco", function () {
+        $("#tblPeixes tbody").append(linha);
 
-    calcular();
+        calcular();
+        preencher_relatorio();
+        $('#input_peso').val('');
+        $('#preco').prop('readonly', true);
 
-});
+        //salvar dados no navegador
+        localStorage.setItem('piscicultor', $('#comprador').val());
+        localStorage.setItem('data', $('#data').val());
+        localStorage.setItem('tanque', $('#tanque').val());
+        localStorage.setItem('preco', $('#preco').val());
+        localStorage.setItem('html_pesos', $("#tblPeixes tbody").html());       
+        localStorage.setItem('peso_total', $("#pesoTotal").html());       
+        localStorage.setItem('valor_total', $("#valorTotal").html());       
+        localStorage.setItem('html_pesos_rel', $("#pesos_box").html());       
 
-function calcular() {
+    }
 
-    let quantidadeTotal = 0;
-    let pesoTotal = 0;
-    let valorTotal = 0;
 
-    $("#tblPeixes tbody tr").each(function () {
+    /*=========================================
+    REMOVER
+    =========================================*/
 
-        let quantidade = parseFloat($(this).find(".quantidade").val()) || 0;
+    $(document).on("click", ".btn-excluir", function () {
+        let id = $(this).closest("tr").data("id");
+        $(this).closest("tr").remove();
+        calcular();
+        
+        $(`#${id}`).remove();  //remove div pesagem no relatorio
+        $('#rel_peso_total').html( $('#pesoTotal').html() );  //atualiza peso total no rel
+        $('#rel_valor_total').html( $('#valorTotal').html() );   //atualiza valor total no relatorio
 
-        let peso = parseFloat($(this).find(".peso").val()) || 0;
+    });
 
-        let preco = parseFloat($(this).find(".preco").val()) || 0;
+    /*=========================================
+    CALCULAR
+    =========================================*/
 
-        let subtotal = peso * preco;
+    $(document).on("keyup change", ".quantidade,.peso,.preco", function () {
 
-        $(this).find(".subtotal").val(
+        calcular();
 
-            subtotal.toLocaleString('pt-BR', {
+    });
+
+    function calcular() {
+
+        let quantidadeTotal = 0;
+        let pesoTotal = 0;
+        let valorTotal = 0;
+
+        $("#tblPeixes tbody tr").each(function () {
+
+            let quantidade = parseFloat($(this).find(".quantidade").val()) || 0;
+
+            let peso = parseFloat($(this).find(".peso").val()) || 0;
+
+            let preco = parseFloat($(this).find(".preco").val()) || 0;
+
+            let subtotal = peso * preco;
+
+            $(this).find(".subtotal").val(
+
+                subtotal.toLocaleString('pt-BR', {
+
+                    style: 'currency',
+                    currency: 'BRL'
+
+                })
+
+            );
+
+            $(this).find(".subtotal").attr('value', $(this).find(".subtotal").val()); //mudar atr value no html tambem
+
+            quantidadeTotal += quantidade;
+            pesoTotal += peso;
+            valorTotal += subtotal;
+
+        });
+
+        let pesoMedio = 0;
+
+        if (quantidadeTotal > 0) {
+
+            pesoMedio = pesoTotal / quantidadeTotal;
+
+        }
+
+        $("#totalQuantidade").text(quantidadeTotal);
+
+        $("#pesoTotal").text(
+
+            pesoTotal.toFixed(2).replace(".", ",") + " Kg"
+
+        );
+
+        $("#pesoMedio").text(
+
+            pesoMedio.toFixed(3).replace(".", ",") + " Kg"
+
+        );
+
+        $("#valorTotal").text(
+
+            valorTotal.toLocaleString('pt-BR', {
 
                 style: 'currency',
                 currency: 'BRL'
@@ -145,102 +219,81 @@ function calcular() {
             })
 
         );
-
-        quantidadeTotal += quantidade;
-        pesoTotal += peso;
-        valorTotal += subtotal;
-
-    });
-
-    let pesoMedio = 0;
-
-    if (quantidadeTotal > 0) {
-
-        pesoMedio = pesoTotal / quantidadeTotal;
+        
 
     }
 
-    $("#totalQuantidade").text(quantidadeTotal);
 
-    $("#pesoTotal").text(
+    function preencher_relatorio() {
 
-        pesoTotal.toFixed(2).replace(".", ",") + " Kg"
+        $('#rel_piscicultor').html( $('#comprador').val() );
+        $('#rel_data').html(
+            $('#data').val().split('-').reverse().join('/')
+        );
 
-    );
+        let peso_digitado = $('#input_peso').val().trim();
+        peso_digitado = peso_digitado.replace('.', ',');
 
-    $("#pesoMedio").text(
+        if(peso_digitado !== '') {
+            let col_peso = `
+                <div class="col-2 border border-secondary text-center" id="${id_pesagem}">
+                    ${peso_digitado}
+                </div>
+            `;
+            $("#pesos_box").append(col_peso);
+        }         
 
-        pesoMedio.toFixed(3).replace(".", ",") + " Kg"
+        $('#rel_valor_kg').html( 'R$ ' + $('#preco').val().replace('.', ',') );
+        $('#rel_peso_total').html( $('#pesoTotal').html() );
+        $('#rel_valor_total').html( $('#valorTotal').html() );   
 
-    );
-
-    $("#valorTotal").text(
-
-        valorTotal.toLocaleString('pt-BR', {
-
-            style: 'currency',
-            currency: 'BRL'
-
-        })
-
-    );
-    
-
-}
+    }
 
 
-function preencher_relatorio() {
+    /*=========================================
+    NOVA DESPESCA
+    =========================================*/
 
-    $('#rel_piscicultor').html( $('#comprador').val() );
-    $('#rel_data').html(
-        $('#data').val().split('-').reverse().join('/')
-    );
+    $("#btnNovo").click(function () {
 
-    let peso_digitado = $('#input_peso').val().trim();
-    let col_peso = `
-        <div class="col-2 border border-secondary text-center">
-            ${peso_digitado}
-        </div>
-    `;
+        if (!confirm("Deseja iniciar uma nova despesca?"))
+            return;
 
-    $('#rel_valor_kg').html( 'R$ ' + $('#preco').val() );
-    $('#rel_peso_total').html( $('#pesoTotal').html() );
-    $('#rel_valor_total').html( $('#valorTotal').html() );
+        nova_despesca();
 
-    $("#pesos_box").append(col_peso);
+    });
 
-}
+    function nova_despesca() {
+
+        $("#tanque").val("");
+        $("#comprador").val("");  
+        $("#preco").val("");  
+        $("#tblPeixes tbody").html("");   
+        localStorage.clear();
+        calcular();
+
+    }
+
+    /*=========================================
+    IMPRIMIR
+    =========================================*/
+
+    $("#btnImprimir").click(function () {
+
+        window.print();
+
+    });
 
 
-/*=========================================
- NOVA DESPESCA
-=========================================*/
 
-$("#btnNovo").click(function () {
 
-    if (!confirm("Deseja iniciar uma nova despesca?"))
-        return;
 
-    $("#tanque").val("");
 
-    $("#comprador").val("");
-
-    $("#observacao").val("");
-
-    $("#tblPeixes tbody").html("");
-
-    adicionarLinha();
-
-    calcular();
 
 });
 
-/*=========================================
- IMPRIMIR
-=========================================*/
 
-$("#btnImprimir").click(function () {
 
-    window.print();
 
-});
+
+
