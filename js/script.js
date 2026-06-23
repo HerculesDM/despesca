@@ -3,7 +3,7 @@ $( document ).ready(function() {
     var id_pesagem = 0;
     
     $("#data").val(new Date().toISOString().split('T')[0]);      // Data de hoje
-    $('#pesos_box').html('');  //limpar pesos teste do rel    
+    $('#pesos_box').html('');  //limpar pesos teste do rel       
     
     
     /*  inicio recupoeracao dados storage */
@@ -34,6 +34,13 @@ $( document ).ready(function() {
     /*  fim recupoeracao dados storage */
 
 
+    //add pesagem ao teclar enter
+    $('#input_peso').on('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // evita o envio do formulário
+            $('#btnAdicionar').trigger('click');
+        }
+    });
 
 
     /*=========================================
