@@ -6,6 +6,22 @@ body{
     font-size:16px;
 }
 
+
+
+#pesos_box{
+    display: flex;
+    flex-flow: column wrap;
+    align-content: flex-start; /* faz as colunas ficarem juntas */
+    gap: 4px;
+    height: 450px;
+}
+
+#pesos_box .item{
+    width: 90px;
+    height: 25px;
+    flex: 0 0 22px;
+}
+
 .titulo-1 {
     font-size: 1.5rem;
     font-weight: bold;

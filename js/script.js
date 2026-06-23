@@ -156,7 +156,7 @@ $( document ).ready(function() {
 
     $(document).on("keyup change", ".quantidade,.peso,.preco", function () {
 
-        calcular();
+        //calcular();
 
     });
 
@@ -243,12 +243,11 @@ $( document ).ready(function() {
         peso_digitado = peso_digitado.replace('.', ',');
 
         if(peso_digitado !== '') {
-            let col_peso = `
-                <div class="col-2 border border-secondary text-center" id="${id_pesagem}">
-                    ${peso_digitado}
-                </div>
+            let html_peso = `
+                <div class="item border border-secondary text-center" id="${id_pesagem}">${peso_digitado}</div>
             `;
-            $("#pesos_box").append(col_peso);
+
+            $("#pesos_box").append(html_peso);
         }         
 
         $('#rel_valor_kg').html( 'R$ ' + $('#preco').val().replace('.', ',') );
@@ -277,8 +276,13 @@ $( document ).ready(function() {
         $("#comprador").val("");  
         $("#preco").val("");  
         $("#preco").prop('readonly',false);
+        $('#rel_valor_kg').html('');
+        $('#rel_peso_total').html('');
+        $('#rel_valor_total').html('');   
         $("#tblPeixes tbody").html("");   
+        $("#pesos_box").html('');
         localStorage.clear();
+
         calcular();
 
     }
