@@ -235,6 +235,7 @@ $( document ).ready(function() {
     function preencher_relatorio() {
 
         $('#rel_piscicultor').html( $('#comprador').val() );
+        $('#rel_tanque').html( $('#tanque').val() );
         $('#rel_data').html(
             $('#data').val().split('-').reverse().join('/')
         );
