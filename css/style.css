@@ -13,7 +13,7 @@ body{
     flex-flow: column wrap;
     align-content: flex-start; /* faz as colunas ficarem juntas */
     gap: 4px;
-    height: 450px;
+    height: 545px;
 }
 
 #pesos_box .item{
