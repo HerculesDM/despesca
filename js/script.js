@@ -15,6 +15,8 @@ $( document ).ready(function() {
                 $('#data').val(localStorage.getItem('data'));
                 $('#tanque').val(localStorage.getItem('tanque'));
                 $('#comprador').val(localStorage.getItem('piscicultor'));
+                $('#telefone').val(localStorage.getItem('telefone'));
+                $('#endereco').val(localStorage.getItem('endereco'));
                 $('#preco').val(localStorage.getItem('preco'));
                 $("#tblPeixes tbody").html(localStorage.getItem('html_pesos'));
                 $("#pesos_box").html(localStorage.getItem('html_pesos_rel'))
@@ -131,6 +133,8 @@ $( document ).ready(function() {
     function salvar_dados() {
         localStorage.setItem('piscicultor', $('#comprador').val());
         localStorage.setItem('data', $('#data').val());
+        localStorage.setItem('telefone', $('#telefone').val());
+        localStorage.setItem('endereco', $('#endereco').val());
         localStorage.setItem('tanque', $('#tanque').val());
         localStorage.setItem('preco', $('#preco').val());
         localStorage.setItem('html_pesos', $("#tblPeixes tbody").html());       
@@ -243,6 +247,8 @@ $( document ).ready(function() {
 
         $('#rel_piscicultor').html( $('#comprador').val() );
         $('#rel_tanque').html( $('#tanque').val() );
+        $('#rel_telefone').html( $('#telefone').val() );
+        $('#rel_endereco').html( $('#endereco').val() );
         $('#rel_data').html(
             $('#data').val().split('-').reverse().join('/')
         );

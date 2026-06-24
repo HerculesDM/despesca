@@ -75,6 +75,28 @@
 
                 <div class="col-md-3 mb-3">
 
+                    <label>Telefone</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="telefone">
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label>Endereço</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="endereco">
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
                     <label>Preço Kg(R$)</label>
 
                     <input
@@ -236,47 +258,47 @@
         </div>
     </div>
 
-    <div class="border-bottom border-secondary text-center fw-bold">
-        Dados Cliente
-    </div>
+    
 
     <!-- dados pisicultor -->
-    <div class="row">
-        <div class="col-2 fw-bold">
-            Nome:
+    <div class="border border-secondary p-2">
+        <div class="row">
+            <div class="col-2 fw-bold">
+                Cliente:
+            </div>
+            <div class="col-5">
+                <span id="rel_piscicultor"></span>
+            </div>
+            <div class="col-2 fw-bold">
+                Telefone: 
+            </div>
+            <div class="col-3">
+                <span id="rel_telefone"></span>
+            </div>
         </div>
-        <div class="col-5">
-            <span id="rel_piscicultor"></span>
-        </div>
-        <div class="col-2 fw-bold">
-            Telefone: 
-        </div>
-        <div class="col-3">
-            <span id="rel_telefone"></span>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-2 fw-bold">
-            Endereço:
-        </div>
-        <div class="col-5">
-            <span id="rel_endereco"></span>
-        </div>
-        <div class="col-2 fw-bold">
-            Data:
-        </div>
-        <div class="col-3">
-            <span id="rel_data"></span>
-        </div>
-    </div>    
+        <div class="row">
+            <div class="col-2 fw-bold">
+                Endereço:
+            </div>
+            <div class="col-5">
+                <span id="rel_endereco"></span>
+            </div>
+            <div class="col-2 fw-bold">
+                Data:
+            </div>
+            <div class="col-3">
+                <span id="rel_data"></span>
+            </div>
+        </div>   
+    </div> 
 
-        <br>
+    <br>
 
-      <!-- pesos -->
-      <div class="border-bottom border-secondary text-center fw-bold mb-2">
+    <!-- pesos -->
+    <div class="text-center fw-bold mb-2">
         Pesagens (Kg)
-      </div>
+    </div>
 
      <div id="pesos_box">
         <!-- dados teste de layout, no producao é criado dinamicamente -->
